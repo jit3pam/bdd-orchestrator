@@ -6,4 +6,4 @@ def manual_mode_enabled() -> bool:
 
 
 def max_retries() -> int:
-    return int(os.getenv("BDD_STEP_RETRIES", "1"))
+    return int(os.getenv("BDD_STEP_RETRIES", "2"))

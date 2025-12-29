@@ -26,16 +26,18 @@ def _block_input_when_non_interactive():
         builtins.input = original_input
 
 
-def run_step(step_name, step_fn, retries=1):
+def run_step(step_name, step_fn, retries=2):
     for attempt in range(1, retries + 1):
         try:
             with _block_input_when_non_interactive():
                 step_fn()
-            return
+            return  # success → exit
         except Exception as e:
             print(f"[Attempt {attempt}/{retries}] Step failed: {step_name}")
+
             if attempt == retries:
                 from bdd_orchestrator.recovery import manual_recovery
                 manual_recovery(step_name, e)
-            else:
-                raise
+                raise  # ensure failure propagates if recovery doesn't resolve
+            # else: silently retry
+

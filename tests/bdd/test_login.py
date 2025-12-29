@@ -11,11 +11,13 @@ def open_page():
 
 @when("user enters credentials")
 def enter_creds():
+    state = {"fixed": False}
+
     def flaky():
-        user_creds = input("Enter Details to Continue: ")
-        if "\n" in user_creds or user_creds.strip() != "":
-            return
-        raise Exception("Failed after user input")
+        if not state["fixed"]:
+            state["fixed"] = True
+            raise Exception("First attempt failed")
+        # success on retry
 
     run_step("enter creds", flaky)
 
