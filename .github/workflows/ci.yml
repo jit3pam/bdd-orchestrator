@@ -25,6 +25,7 @@ jobs:
 
       - name: Run tests
         run: pytest -v --cucumberjson=reports/cucumber/results.json
+      
       - name: Upload Cucumber JSON
         if: always()
         uses: actions/upload-artifact@v4
@@ -32,3 +33,18 @@ jobs:
           name: cucumber
           path: reports/cucumber/results.json
           retention-days: 30
+
+      - name: Debug show report directory
+        if: always()
+        run: |
+          echo "-- ls reports/cucumber --"
+          ls -la reports/cucumber || true
+
+      - name: Debug list artifacts for this run
+        if: always()
+        env:
+          RUN_ID: ${{ github.run_id }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Listing artifacts for run $RUN_ID in $REPO"
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/$REPO/actions/runs/$RUN_ID/artifacts" | python -m json.tool || true

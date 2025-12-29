@@ -2,6 +2,7 @@ name: Publish Cucumber HTML Report
 
 permissions:
   contents: read
+  actions: read
   pages: write
 
 on:
@@ -9,6 +10,27 @@ on:
     workflows: ["CI"]
     types:
       - completed
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Debug: list artifacts for triggering run
+        env:
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          echo "Listing artifacts for run $RUN_ID in $REPO"
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/$REPO/actions/runs/$RUN_ID/artifacts" | python -m json.tool || true
+
+      - name: Download cucumber json
+        uses: actions/download-artifact@v4
+        with:
+          name: cucumber
+          path: reports/cucumber/
+          run-id: ${{ github.event.workflow_run.id }}
 
 jobs:
   report:
