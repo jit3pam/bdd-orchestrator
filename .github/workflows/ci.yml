@@ -25,7 +25,19 @@ jobs:
 
       - name: Run tests
         run: pytest -v --cucumberjson=reports/cucumber/results.json
-      
+
+      - name: Ensure cucumber JSON exists and debug
+        if: always()
+        run: |
+          mkdir -p reports/cucumber
+          if [ ! -s reports/cucumber/results.json ]; then
+            echo "[]" > reports/cucumber/results.json
+            echo "Created empty results.json"
+          fi
+          echo "results.json size: $(stat -c%s reports/cucumber/results.json || echo 0)"
+          ls -la reports/cucumber || true
+          cat reports/cucumber/results.json || true
+
       - name: Upload Cucumber JSON
         if: always()
         uses: actions/upload-artifact@v4
