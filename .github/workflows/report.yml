@@ -1,5 +1,9 @@
 name: Publish Cucumber HTML Report
 
+permissions:
+  contents: read
+  pages: write
+
 on:
   workflow_run:
     workflows: ["CI"]
@@ -17,6 +21,7 @@ jobs:
         with:
           name: cucumber
           path: reports/cucumber/
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Setup Node
         uses: actions/setup-node@v4

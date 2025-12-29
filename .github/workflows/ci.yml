@@ -19,14 +19,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install -e . pytest pytest-bdd
-        
+
       - name: Prepare report directories
         run: mkdir -p reports/cucumber
 
       - name: Run tests
         run: pytest -v --cucumberjson=reports/cucumber/results.json
       - name: Upload Cucumber JSON
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cucumber
-          path: reports/cucumber/
+          path: reports/cucumber/results.json
+          retention-days: 30
