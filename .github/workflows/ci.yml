@@ -3,9 +3,8 @@ name: CI
 on:
   push:
     branches: [main]
-    branches-ignore: [cucumber_results]
   pull_request:
-    branches-ignore: [cucumber_results]
+    branches: [main]
 
 jobs:
   test:
