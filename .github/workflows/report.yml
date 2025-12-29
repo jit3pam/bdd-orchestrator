@@ -1,0 +1,37 @@
+name: Publish Cucumber HTML Report
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download cucumber json
+        uses: actions/download-artifact@v3
+        with:
+          name: cucumber
+          path: reports/cucumber
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install reporter
+        run: npm install multiple-cucumber-html-reporter
+
+      - name: Generate HTML report
+        run: node generate_report.js
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: reports/html
