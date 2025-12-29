@@ -18,3 +18,6 @@ extra-index-url = https://pip.pkg.github.com/jit3pam
 ```bash
 export BDD_MANUAL_MODE=true
 pytest tests/bdd --cucumberjson=reports/cucumber/results.json
+
+## Example HTML results
+https://jit3pam.github.io/bdd-orchestrator/
