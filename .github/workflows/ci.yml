@@ -3,7 +3,9 @@ name: CI
 on:
   push:
     branches: [main]
+    branches-ignore: [cucumber_results]
   pull_request:
+    branches-ignore: [cucumber_results]
 
 jobs:
   test:
@@ -24,39 +26,29 @@ jobs:
         run: mkdir -p reports/cucumber
 
       - name: Run tests
-        run: pytest -v --cucumberjson=reports/cucumber/results.json
+        run: pytest -v --cucumberjson=reports/cucumber/${{ github.run_id }}.json
 
-      - name: Ensure cucumber JSON exists and debug
+      - name: Ensure cucumber JSON exists
         if: always()
         run: |
-          mkdir -p reports/cucumber
-          if [ ! -s reports/cucumber/results.json ]; then
-            echo "[]" > reports/cucumber/results.json
-            echo "Created empty results.json"
+          if [ ! -s reports/cucumber/${{ github.run_id }}.json ]; then
+            echo "[]" > reports/cucumber/${{ github.run_id }}.json
           fi
-          echo "results.json size: $(stat -c%s reports/cucumber/results.json || echo 0)"
-          ls -la reports/cucumber || true
-          cat reports/cucumber/results.json || true
 
-      - name: Upload Cucumber JSON
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cucumber
-          path: reports/cucumber/results.json
-          retention-days: 30
-
-      - name: Debug show report directory
-        if: always()
+      - name: Checkout or create cucumber_results branch
         run: |
-          echo "-- ls reports/cucumber --"
-          ls -la reports/cucumber || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+          if git ls-remote --heads origin cucumber_results | grep -q cucumber_results; then
+            git checkout cucumber_results
+          else
+            git checkout -b cucumber_results
+          fi
 
-      - name: Debug list artifacts for this run
-        if: always()
-        env:
-          RUN_ID: ${{ github.run_id }}
-          REPO: ${{ github.repository }}
+      - name: Add and commit cucumber results
         run: |
-          echo "Listing artifacts for run $RUN_ID in $REPO"
-          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/$REPO/actions/runs/$RUN_ID/artifacts" | python -m json.tool || true
+          git add -f reports/cucumber/${{ github.run_id }}.json || true
+          git commit -m "Add cucumber results for run $GITHUB_RUN_ID" || echo "No changes to commit"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push origin HEAD:cucumber_results || true

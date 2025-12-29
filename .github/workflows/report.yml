@@ -15,22 +15,20 @@ jobs:
   report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Debug list artifacts for triggering run
-        env:
-          REPO: ${{ github.repository }}
-          RUN_ID: ${{ github.event.workflow_run.id }}
-        run: |
-          echo "Listing artifacts for run $RUN_ID in $REPO"
-          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/$REPO/actions/runs/$RUN_ID/artifacts" | python -m json.tool || true
-
-      - name: Download cucumber json
-        uses: actions/download-artifact@v4
+      - name: Checkout cucumber_results branch
+        uses: actions/checkout@v4
         with:
-          name: cucumber
-          path: reports/cucumber/
-          run-id: ${{ github.event.workflow_run.id }}
+          ref: cucumber_results
+          fetch-depth: 0
+
+      - name: Ensure reports/cucumber has files
+        run: |
+          if [ ! -d reports/cucumber ] || [ -z "$(ls -A reports/cucumber 2>/dev/null)" ]; then
+            echo "No cucumber files found in branch cucumber_results"
+            ls -la || true
+            exit 1
+          fi
+          ls -la reports/cucumber
 
       - name: Setup Node
         uses: actions/setup-node@v4
