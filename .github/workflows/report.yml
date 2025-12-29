@@ -16,7 +16,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: cucumber
-          path: reports/cucumber
+          path: reports/cucumber/
 
       - name: Setup Node
         uses: actions/setup-node@v4
