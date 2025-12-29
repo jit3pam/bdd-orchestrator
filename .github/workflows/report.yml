@@ -1,9 +1,7 @@
 name: Publish Cucumber HTML Report
 
 permissions:
-  contents: read
-  actions: read
-  pages: write
+  contents: write
 
 on:
   workflow_run:
