@@ -37,3 +37,6 @@ URL, DOM snippet, and an optional screenshot, then prints an AI-style diagnosis 
 
 ## Example HTML results
 https://jit3pam.github.io/bdd-orchestrator/
+
+## Dummy Update
+This is a dummy README update to refresh the PR.
