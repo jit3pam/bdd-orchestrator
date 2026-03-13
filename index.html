@@ -867,7 +867,7 @@ body.darkmode .navbar-text {
         <tr>
             <td class="chart">
                 <canvas id="feature-chart"></canvas>
-                <div class="total">3</div>
+                <div class="total">4</div>
             </td>
             <td>
                 <table class="tile_info">
@@ -932,7 +932,7 @@ body.darkmode .navbar-text {
         <tr>
             <td class="chart">
                 <canvas id="scenario-chart"></canvas>
-                <div class="total">3</div>
+                <div class="total">4</div>
             </td>
             <td>
                 <table class="tile_info">
@@ -1025,6 +1025,11 @@ body.darkmode .navbar-text {
         </div>
 
         <div class="x_content">
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <input id="features-search-box" type="text" class="form-control" placeholder="Search features..." autocomplete="off">
+                </div>
+            </div>
             <div class="table-responsive">
                 <table id="features-table" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
                        width="100%">
@@ -1061,7 +1066,7 @@ body.darkmode .navbar-text {
                     
                     <tr>
                         <td>
-                            <a href="features/f3ed5491-9c24-4fa4-9090-14f77c8a2b98-features-login-feature.html">Login</a>
+                            <a href="features/8da56b0a-f16a-477f-a094-075995b76a63-features-login-feature.html">Login</a>
                         </td>
                         <td class="text-center">
                             
@@ -1142,7 +1147,7 @@ body.darkmode .navbar-text {
                     
                     <tr>
                         <td>
-                            <a href="features/18c3f3f5-a9bc-4664-b106-6a92f6bc3a0f-features-login-feature.html">Login</a>
+                            <a href="features/628ce7de-95fe-4350-932a-e5df8a80ea48-features-login-feature.html">Login</a>
                         </td>
                         <td class="text-center">
                             
@@ -1223,7 +1228,88 @@ body.darkmode .navbar-text {
                     
                     <tr>
                         <td>
-                            <a href="features/8653dd7d-ba6e-4835-ab78-9e5d2312a7bd-features-login-feature.html">Login</a>
+                            <a href="features/614eecad-86ba-45aa-aef2-c0ee0c7129af-features-login-feature.html">Login</a>
+                        </td>
+                        <td class="text-center">
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            
+                            
+                            
+                            
+                            
+                            <i class="fa fa-check-circle passed-color fa-lg" data-bs-toggle="tooltip" data-placement="top" title="Passed">
+                                <span>check-circle passed-color</span>
+                            </i>
+                        </td>
+                        
+                            <td class="text-center">
+                                
+                                
+                                
+                                
+                                
+                                
+                                <i class="fa fa-desktop fa-lg" data-bs-toggle="tooltip" data-placement="top" title="Desktop">
+                                    <span>desktop</span>
+                                </i>
+                            </td>
+                            <td>
+                                
+                                
+                                
+                                
+                                Local machine
+                            </td>
+                            <td>
+                                
+                                
+                                
+                                
+                                <i class="fa fa-windows fa-lg"><span>windows</span></i>
+                                
+                            </td>
+                            
+                            
+                            <td>
+                                
+                                
+                                
+                                
+                                
+                                
+                                <i class="fa fa-chrome fa-lg">
+                                    <span>chrome</span></i>
+                                Latest
+                                
+
+                                
+                            </td>
+                            
+                        
+                        
+                        
+                        <td class="text-right ">1</td>
+                        <td class="text-right ">1</td>
+                        <td class="text-right none">0</td>
+                        
+                        
+                        
+                        
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <a href="features/1f92b775-a112-4378-9e68-765eb545a527-features-login-feature.html">Login</a>
                         </td>
                         <td class="text-center">
                             
@@ -1337,10 +1423,31 @@ body.darkmode .navbar-text {
         <!-- Custom -->
         <script>
             $(document).ready(function () {
-                $('#features-table').dataTable({
+                // Get search param from querystring
+                function getQueryParam(name) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    return urlParams.get(name) || '';
+                }
+
+                var searchValue = getQueryParam('search');
+                if (searchValue) {
+                    $('#features-search-box').val(searchValue);
+                }
+
+                var table = $('#features-table').DataTable({
                     "order": [[0, "asc"]],
                     "lengthMenu": [[50, 100, 150, -1], [50, 100, 150, "All"]],
                     "stateSave": true
+                });
+
+                // If search param exists, filter table
+                if (searchValue) {
+                    table.search(searchValue).draw();
+                }
+
+                // Live search as user types
+                $('#features-search-box').on('input', function() {
+                    table.search(this.value).draw();
                 });
 
                 var featureOptions = {
@@ -1369,7 +1476,7 @@ body.darkmode .navbar-text {
                         ],
                         datasets: [{
                             data: [
-                                3,
+                                4,
                                 0,
                                 0,
                                 0,
@@ -1408,7 +1515,7 @@ body.darkmode .navbar-text {
                         ],
                         datasets: [{
                             data: [
-                                3,
+                                4,
                                 0,
                                 0,
                                 0,
