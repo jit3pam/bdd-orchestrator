@@ -29,3 +29,6 @@ classifiers = [
 Homepage = "https://github.com/jit3pam/bdd-orchestrator"
 Issues = "https://github.com/jit3pam/bdd-orchestrator/issues"
 Repository = "https://github.com/jit3pam/bdd-orchestrator"
+
+[project.entry-points.pytest11]
+bdd_orchestrator = "bdd_orchestrator.pytest_plugin"
